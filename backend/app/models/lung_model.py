@@ -1,4 +1,5 @@
 import torch 
+import os 
 
 import torch.nn as nn
 import torch.optim as optim
@@ -75,10 +76,17 @@ for epoch in range(num_epochs):
     print("Epoch", epoch+1, "loss:-", running_loss) #this prints the loss after each epoch
 
 # saving the model 
-torch.save(model.state_dict(),"lung_cancer_model.pth") # this saves the model weights to a file 
+
+save_dir = r"C:\Users\Hitanshu\Documents\ai_lung\backend\app\models\savedmodels"
+save_file = "lung_cancer_model.pth"
+full_path = os.path.join(save_dir, save_file)
+
+torch.save(model.state_dict(), full_path)
+print(f"Successfully saved to: {full_path}")
+
 
 #  loading the model for prediction 
-model.load_state_dict(torch.load("lung_cancer_model.pth", map_location=device)) # this loads the model weights from the file 
+model.load_state_dict(torch.load(full_path, map_location=device)) # this loads the model weights from the file 
 
 #  testing the model
 model.eval() # sets model in evaluation mode
