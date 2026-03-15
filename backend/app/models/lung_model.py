@@ -77,12 +77,19 @@ for epoch in range(num_epochs):
 
 # saving the model 
 
+# saving the model
+
 save_dir = r"C:\Users\Hitanshu\Documents\ai_lung\backend\app\models\savedmodels"
+
+# create folder if it doesn't exist
+os.makedirs(save_dir, exist_ok=True)
+
 save_file = "lung_cancer_model.pth"
 full_path = os.path.join(save_dir, save_file)
 
 torch.save(model.state_dict(), full_path)
-print(f"Successfully saved to: {full_path}")
+
+print(f"Model successfully saved to: {full_path}")
 
 
 #  loading the model for prediction 
