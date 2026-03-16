@@ -31,7 +31,7 @@ transform = transforms.Compose([
 ])
 
 # Load image
-image_path = r"C:\Users\Hitanshu\Documents\ai_lung\backend\app\models\Datasets\validation\normal\4 (2).png"  # replace with your test image path
+image_path = r"C:\Users\Hitanshu\Documents\ai_lung\Datasets\validation\squamous.cell.carcinoma\000108 (3).png"  # replace with your test image path
 image = Image.open(image_path).convert("RGB")
 image = transform(image).unsqueeze(0).to(device)
 
