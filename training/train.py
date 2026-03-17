@@ -22,6 +22,7 @@ train_dataset = datasets.ImageFolder(train_dir, transform=transform)
 val_dataset = datasets.ImageFolder(validation_dir, transform=transform)
 
 train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
+print(train_dataset.class_to_idx)
 val_loader = DataLoader(val_dataset, batch_size=16)
 
 # Load EfficientNet
