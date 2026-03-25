@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lung Cancer Detection</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Lung Cancer Detection</h1>
+
+    <input type="file" id="fileInput" accept="image/*">
+    <br><br>
+
+    <img id="preview" style="max-width: 300px; display: none;" />
+
+    <br><br>
+    <button onclick="uploadImage()">Predict</button>
+
+    <p id="loading" style="display:none;">Processing...</p>
+
+    <div id="result"></div>
+</div>
+
+<script>
+const fileInput = document.getElementById("fileInput");
+const preview = document.getElementById("preview");
+
+// Show image preview
+fileInput.addEventListener("change", function () {
+    const file = fileInput.files[0];
+
+    if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = "block";
+    }
+});
+
+async function uploadImage() {
+    console.log("Button clicked");
+
+    const file = fileInput.files[0];
+
+    if (!file) {
+        alert("Please select an image first");
+        return;
+    }
+
+    document.getElementById("loading").style.display = "block";
+    document.getElementById("result").innerHTML = "";
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+        const response = await fetch("http://127.0.0.1:8000/predict-lung-cancer", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await response.json();
+        console.log("Response:", data);
+
+        document.getElementById("loading").style.display = "none";
+
+        document.getElementById("result").innerHTML =
+    `<h3>Prediction: ${data.prediction}</h3>
+     <h3>Confidence: ${Number(data.confidence).toFixed(2)}%</h3>`;
+
+    } catch (error) {
+        console.error("Error:", error);
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("result").innerHTML =
+            "<p style='color:red;'>Error processing image</p>";
+    }
+}
+</script>
+
+</body>
+</html>
