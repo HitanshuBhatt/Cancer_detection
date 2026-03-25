@@ -8,9 +8,17 @@ import os
 
 # Image preprocessing
 transform = transforms.Compose([
-    transforms.Resize((224,224)),
-    transforms.ToTensor()
+
+    transforms.Resize((224, 224)),
+    transforms.RandomHorizontalFlip(),
+    transforms.RandomRotation(10),
+    transforms.ToTensor(),
+    transforms.Normalize(
+        mean=[0.485, 0.456, 0.406],
+        std=[0.229, 0.224, 0.225]
+    )
 ])
+
 
 # Load datasets
 
@@ -41,7 +49,7 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 # Training loop
-epochs = 10
+epochs = 20
 
 for epoch in range(epochs):
 
@@ -66,6 +74,9 @@ for epoch in range(epochs):
         running_loss += loss.item()
 
     print(f"Epoch {epoch+1}/{epochs} Loss: {running_loss:.4f}")
+
+    transforms.RandomHorizontalFlip(),
+    transforms.RandomRotation(10),
 
 # Save model
 
