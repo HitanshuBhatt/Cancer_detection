@@ -1,0 +1,40 @@
+<form id="signupForm" class="login-card">
+    <h2>Create Account</h2>
+    
+    <div class="input-group">
+        <label>Full Name</label>
+        <input type="text" id="regName" placeholder="John Doe" required>
+    </div>
+
+    <div class="input-group">
+        <label>Reason for Access</label>
+        <select id="regReason" required>
+            <option value="">Select a reason</option>
+            <option value="student">Student</option>
+            <option value="staff">Staff</option>
+            <option value="visitor">Visitor</option>
+        </select>
+    </div>
+
+    <div class="input-group">
+        <label>Date of Birth</label>
+        <input type="date" id="regDob" required>
+    </div>
+
+    <div class="input-group">
+        <label>Contact Number</label>
+        <input type="tel" id="regContact" placeholder="123-456-7890" required>
+    </div>
+
+    <div class="input-group">
+        <label>Email (Username)</label>
+        <input type="email" id="regEmail" placeholder="email@example.com" required>
+    </div>
+
+    <div class="input-group">
+        <label>New Password</label>
+        <input type="password" id="regPassword" placeholder="••••••••" required>
+    </div>
+
+    <button type="submit" class="login-btn">Register</button>
+</form>
