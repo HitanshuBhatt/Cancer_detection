@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Appointments</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body onload="renderAppointments()">
+  <div class="layout">
+    <aside class="sidebar">
+      <h2>MediCare</h2>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="patients.html">Patients</a>
+      <a href="appointments.html" class="active">Appointments</a>
+      <a href="index.html">Logout</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="dashboard-header">
+        <h1>Appointments Management</h1>
+        <p>Doctor can add, review, and delete appointments</p>
+      </header>
+
+      <div class="panel">
+        <h2>Add New Appointment</h2>
+        <form class="appointment-form" onsubmit="addAppointment(event)">
+          <div class="form-grid">
+            <div>
+              <label>Patient Name</label>
+              <input type="text" id="patientName" placeholder="Enter patient name" required />
+            </div>
+
+            <div>
+              <label>Date</label>
+              <input type="date" id="appointmentDate" required />
+            </div>
+
+            <div>
+              <label>Time</label>
+              <input type="time" id="appointmentTime" required />
+            </div>
+
+            <div>
+              <label>Reason</label>
+              <input type="text" id="appointmentReason" placeholder="Enter reason" required />
+            </div>
+          </div>
+
+          <button type="submit" class="btn">Add Appointment</button>
+        </form>
+      </div>
+
+      <div class="panel">
+        <h2>All Appointments</h2>
+        <div id="appointmentsList" class="appointments-list"></div>
+      </div>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
