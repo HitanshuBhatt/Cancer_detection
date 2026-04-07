@@ -1,51 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home | Dashboard</title>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            text-align: center;
-            background: white;
-            padding: 3rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        h1 { color: #1f2937; }
-        .logout-btn {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: #ef4444;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Doctor Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-    <div class="container">
-        <h1>Welcome to the Home Page!</h1>
-        <p>You have successfully logged in.</p>
-        <button class="logout-btn" onclick="logout()">Logout</button>
+<body onload="loadDashboard()">
+  <div class="layout">
+    <aside class="sidebar">
+      <h2>MediCare</h2>
+      <a href="dashboard.html" class="active">Dashboard</a>
+      <a href="patients.html">Patients</a>
+      <a href="appointments.html">Appointments</a>
+      <a href="index.html">Logout</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="dashboard-header">
+        <h1>Doctor Dashboard</h1>
+        <p>Welcome back, Doctor</p>
+      </header>
+
+      <section class="stats">
+        <div class="stat-card">
+          <h3 id="todayAppointments">0</h3>
+          <p>Today's Appointments</p>
+        </div>
+        <div class="stat-card">
+          <h3 id="totalAppointments">0</h3>
+          <p>Total Appointments</p>
+        </div>
+        <div class="stat-card">
+          <h3 id="futureAppointments">0</h3>
+          <p>Upcoming Appointments</p>
+        </div>
+      </section>
+
+      <section class="content-grid">
+        <div class="panel">
+          <h2>Doctor Schedule</h2>
+          <ul class="schedule-list">
+            <li>Monday — 9:00 AM to 2:00 PM</li>
+            <li>Tuesday — 10:00 AM to 4:00 PM</li>
+            <li>Wednesday — 8:00 AM to 1:00 PM</li>
+            <li>Thursday — 11:00 AM to 5:00 PM</li>
+            <li>Friday — 9:30 AM to 3:00 PM</li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <h2>Quick Access</h2>
+          <div class="quick-links">
+            <a class="btn small-btn" href="patients.html">View Patients</a>
+            <a class="btn small-btn" href="appointments.html">Manage Appointments</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel dashboard-section">
+  <h2>Appointments Record Graph</h2>
+  <p class="graph-note">Appointments by weekday</p>
+
+  <div class="week-chart">
+    <div class="chart-y-axis">
+      <span id="yMax">5</span>
+      <span id="yMid">3</span>
+      <span>0</span>
     </div>
 
-    <script>
-        function logout() {
-            // Send user back to login page
-            window.location.href = "index.html";
-        }
-    </script>
-</body>
-</html>
+    <div class="chart-box">
+      <div class="chart-grid-line top-line"></div>
+      <div class="chart-grid-line mid-line"></div>
+      <div class="chart-grid-line low-line"></div>
+
+      <div class="chart-bars">
+        <div class="chart-day">
+          <div class="chart-value" id="valMon">0</div>
+          <div class="chart-bar" id="barMon"></div>
+          <div class="chart-label">Mon</div>
+        </div>
+
+        <div class="chart-day">
+          <div class="chart-value" id="valTue">0</div>
+          <div class="chart-bar" id="barTue"></div>
+          <div class="chart-label">Tue</div>
+        </div>
+
+        <div class="chart-day">
+          <div class="chart-value" id="valWed">0</div>
+          <div class="chart-bar" id="barWed"></div>
+          <div class="chart-label">Wed</div>
+        </div>
+
+        <div class="chart-day">
+          <div class="chart-value" id="valThu">0</div>
+          <div class="chart-bar" id="barThu"></div>
+          <div class="chart-label">Thu</div>
+        </div>
+
+        <div class="chart-day">
+          <div class="chart-value" id="valFri">0</div>
+          <div class="chart-bar" id="barFri"></div>
+          <div class="chart-label">Fri</div>
+        </div>
+
+        <div class="chart-day">
+          <div class="chart-value" id="valSat">0</div>
+          <div class="chart-bar" id="barSat"></div>
+          <div class="chart-label">Sat</div>
+        </div>
+
+        <div class="chart-day">
+          <div class="chart-value" id="valSun">0</div>
+          <div class="chart-bar" id="barSun"></div>
+          <div class="chart-label">Sun</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
