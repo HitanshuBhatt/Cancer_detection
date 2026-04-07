@@ -2,7 +2,6 @@
 
 An AI-powered system to assist doctors in detecting lung cancer from CT scan images. The system provides:
 
-- **Automated Detection**: Classifies CT scans as Normal, Benign, or Malignant
 - **Heatmap Visualization**: Shows exactly where the AI detected potential abnormalities
 - **Probability Scores**: Provides confidence percentages for all predictions
 - **Doctor-Friendly Interface**: Clean, intuitive web interface for medical professionals
