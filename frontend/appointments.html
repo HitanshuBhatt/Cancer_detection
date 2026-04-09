@@ -4,15 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Appointments</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="appointment.css" />
 </head>
 <body onload="renderAppointments()">
   <div class="layout">
     <aside class="sidebar">
       <h2>MediCare</h2>
-      <a href="dashboard.html">Dashboard</a>
+      <a href="dashboard.html" class="active">Dashboard</a>
       <a href="patients.html">Patients</a>
-      <a href="appointments.html" class="active">Appointments</a>
+      <a href="appointments.html">Appointments</a>
+      <a href="detection.html">Lung Cancer Detection</a>
       <a href="index.html">Logout</a>
     </aside>
 
@@ -23,32 +24,50 @@
       </header>
 
       <div class="panel">
-        <h2>Add New Appointment</h2>
-        <form class="appointment-form" onsubmit="addAppointment(event)">
-          <div class="form-grid">
-            <div>
-              <label>Patient Name</label>
-              <input type="text" id="patientName" placeholder="Enter patient name" required />
-            </div>
+       <div class="section-card" style="background: white; padding: 30px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); margin-bottom: 30px;">
+    <h2 style="margin-top: 0; margin-bottom: 20px; color: #1e293b; font-size: 1.25rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px;">
+        Add New Appointment
+    </h2>
+    
+    <form id="appointmentForm" onsubmit="addAppointment(event)" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        
+        <div class="form-group">
+            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #475569;">Select Patient</label>
+            <select id="patientSelect" required style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; background: white; color: #1e293b;">
+                <option value="">-- Select a Patient --</option>
+            </select>
+        </div>
 
-            <div>
-              <label>Date</label>
-              <input type="date" id="appointmentDate" required />
-            </div>
+        <div class="form-group">
+            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #475569;">Doctor ID</label>
+            <input type="number" id="doctorId" value="1" readonly 
+                   style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; background: #f8fafc; color: #64748b; cursor: not-allowed;">
+        </div>
 
-            <div>
-              <label>Time</label>
-              <input type="time" id="appointmentTime" required />
-            </div>
+        <div class="form-group">
+            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #475569;">Date</label>
+            <input type="date" id="appointmentDate" required 
+                   style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px;">
+        </div>
 
-            <div>
-              <label>Reason</label>
-              <input type="text" id="appointmentReason" placeholder="Enter reason" required />
-            </div>
-          </div>
+        <div class="form-group">
+            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #475569;">Time</label>
+            <input type="time" id="appointmentTime" required 
+                   style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px;">
+        </div>
 
-          <button type="submit" class="btn">Add Appointment</button>
-        </form>
+        <div class="form-group" style="grid-column: span 2;">
+            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #475569;">Reason for Visit</label>
+            <input type="text" id="appointmentReason" placeholder="e.g. Chest X-Ray Review" required 
+                   style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px;">
+        </div>
+
+        <button type="submit" 
+                style="grid-column: span 2; background: #2563eb; color: white; padding: 14px; border: none; border-radius: 10px; cursor: pointer; font-size: 1rem; font-weight: 600; transition: background 0.3s ease;">
+            Confirm & Schedule Appointment
+        </button>
+    </form>
+</div>
       </div>
 
       <div class="panel">
@@ -58,6 +77,6 @@
     </main>
   </div>
 
-  <script src="script.js"></script>
+  <script src="appointments.js"></script>
 </body>
 </html>
