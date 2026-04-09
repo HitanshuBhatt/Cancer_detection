@@ -8,17 +8,30 @@ async function loadDashboard() {
 
         // 2. Filter using the first 10 characters of your DB timestamp
         const todaysAppts = appointments.filter(appt => {
-            // This extracts "2026-04-09" from "2026-04-09 20:44:00"
             const dbDateOnly = appt.appointment_time.substring(0, 10);
             return dbDateOnly === todayStr;
         });
-        
+
+        // --- UPCOMING APPOINTMENTS SECTION ---
+        const now = new Date();
+        const sevenDaysLater = new Date();
+        sevenDaysLater.setDate(now.getDate() + 7);
+
+        const upcomingAppts = appointments.filter(appt => {
+            const apptDate = new Date(appt.appointment_time);
+            // Must be after right now and within the 7-day window
+            return apptDate > now && apptDate <= sevenDaysLater;
+        });
+        // -------------------------------------
+
         // 3. Update the UI Counters using your HTML IDs
         const todayCount = document.getElementById('todayAppointments');
         const totalCount = document.getElementById('totalAppointments');
+        const upcomingCount = document.getElementById('futureAppointments'); // ADD THIS
 
-        if (todayCount) todayCount.textContent = todaysAppts.length; // Shows 2
-        if (totalCount) totalCount.textContent = appointments.length; // Shows 3
+        if (todayCount) todayCount.textContent = todaysAppts.length; 
+        if (totalCount) totalCount.textContent = appointments.length; 
+        if (upcomingCount) upcomingCount.textContent = upcomingAppts.length; // ADD THIS
 
         window.todaysApptsData = todaysAppts;
 
