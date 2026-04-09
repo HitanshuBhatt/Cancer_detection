@@ -1,25 +1,41 @@
-// Registration Logic
-document.getElementById('signupForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
+document.getElementById('signupForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    // Get values from the form
+    const fullName = document.getElementById('fullName').value;
+    const email = document.getElementById('email').value;
+    const dob = document.getElementById('dob').value;
+    const address = document.getElementById('address').value;
+    const password = document.getElementById('password').value;
 
     const userData = {
-        name: document.getElementById('regName').value,
-        reason: document.getElementById('regReason').value,
-        dob: document.getElementById('regDob').value,
-        contact: document.getElementById('regContact').value,
-        email: document.getElementById('regEmail').value,
-        password: document.getElementById('regPassword').value
+        full_name: fullName,
+        email: email,
+        password: password,
+        dob: dob,
+        address: address
     };
 
-    // Sending data to your backend server (Example URL)
-    const response = await fetch('https://your-api-url.com/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData)
-    });
+    try {
+        const response = await fetch('http://127.0.0.1:8000/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        });
 
-    if (response.ok) {
-        alert("Registration Successful! You can now log in.");
-        window.location.href = "index.html";
+        const data = await response.json();
+
+        if (response.ok) {
+            alert("Registration successful! Redirecting to login...");
+            window.location.href = "login.html";
+        } else {
+            // Show error (e.g., if email already exists)
+            alert("Error: " + (data.detail || "Registration failed"));
+        }
+    } catch (error) {
+        console.error("Connection Error:", error);
+        alert("Could not connect to the server. Please ensure your backend is running.");
     }
 });

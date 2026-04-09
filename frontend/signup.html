@@ -1,41 +1,53 @@
-<form id="signupForm" class="login-card">
-    <h2>Create Account</h2>
-    
-    <div class="input-group">
-        <label>Full Name</label>
-        <input type="text" id="regName" placeholder="John Doe" required>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare | Doctor Registration</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style="background-color: #f4f7fb; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;">
+
+    <div class="detection-container" style="max-width: 450px; width: 90%;">
+        <h1 style="color: #0f4c81; margin-bottom: 10px;">Create Account</h1>
+        <p style="color: #64748b; margin-bottom: 30px;">Register as a healthcare professional.</p>
+
+        <form id="signupForm" style="text-align: left;">
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 5px;">Full Name</label>
+                <input type="text" id="fullName" class="styled-input-field" placeholder="Dr. Hitanshu Bhatt" required style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 5px;">Email Address</label>
+                <input type="email" id="email" class="styled-input-field" placeholder="name@hospital.com" required style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px;">
+            </div>
+
+            <div style="margin-bottom: 15px; display: flex; gap: 10px;">
+                <div style="flex: 1;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 5px;">Date of Birth</label>
+                    <input type="date" id="dob" required style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px;">
+                </div>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 5px;">Clinic/Practice Address</label>
+                <input type="text" id="address" placeholder="123 Medical Way, Red Deer" required style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px;">
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 5px;">Create Password</label>
+                <input type="password" id="password" required style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px;">
+            </div>
+
+            <button type="submit" class="btn-primary">Register Account</button>
+        </form>
+
+        <p style="margin-top: 20px; font-size: 0.9rem;">
+            Already have an account? <a href="login.html" style="color: #2563eb; font-weight: 600; text-decoration: none;">Log In</a>
+        </p>
     </div>
 
-    <div class="input-group">
-        <label>Reason for Access</label>
-        <select id="regReason" required>
-            <option value="">Select a reason</option>
-            <option value="student">Student</option>
-            <option value="staff">Staff</option>
-            <option value="visitor">Visitor</option>
-        </select>
-    </div>
-
-    <div class="input-group">
-        <label>Date of Birth</label>
-        <input type="date" id="regDob" required>
-    </div>
-
-    <div class="input-group">
-        <label>Contact Number</label>
-        <input type="tel" id="regContact" placeholder="123-456-7890" required>
-    </div>
-
-    <div class="input-group">
-        <label>Email (Username)</label>
-        <input type="email" id="regEmail" placeholder="email@example.com" required>
-    </div>
-
-    <div class="input-group">
-        <label>New Password</label>
-        <input type="password" id="regPassword" placeholder="••••••••" required>
-    </div>
-
-    <button type="submit" class="login-btn">Register</button>
-</form>
-<script src="signup.js"></script>
+    <script src="signup.js"></script>
+</body>
+</html>
