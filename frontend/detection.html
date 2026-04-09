@@ -5,23 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MediCare | Lung Cancer Detection</title>
     <link rel="stylesheet" href="detection.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 </head>
 <body>
 
 <div class="layout">
-    <div class="sidebar">
-        <h2 class="logo">MediCare</h2>
+  <aside class="sidebar">
+        <h2>MediCare</h2>
         <nav>
-            <a href="dashboard.html" class="active">Dashboard</a>
-      <a href="patients.html">Patients</a>
-      <a href="appointments.html">Appointments</a>
-      <a href="detection.html">Lung Cancer Detection</a>
-      <a href="index.html">Logout</a>
+            <a href="home.html">Dashboard</a>
+            <a href="patients.html">Patients</a>
+            <a href="appointments.html">Appointments</a>
+            <a href="detection.html" class="active">Lung Cancer Detection</a>
+            <a href="login.html" class="logout-link">Logout</a>
         </nav>
-    </div>
+    </aside>
 
-    <div class="main-content">
+    <main class="main-content">
         <div class="detection-container">
             <div class="header-section">
                 <h1>Lung Cancer Detection</h1>
@@ -43,7 +43,7 @@
 
             <div id="result" style="display: none;"></div>
         </div>
-    </div>
+    </main>
 </div>
 
 <script src="detection.js"></script>

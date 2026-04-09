@@ -26,3 +26,9 @@ function loadDashboard() {
         futureCountElement.textContent = futureAppts.length;
     }
 }
+
+// Display the doctor's name from the login session
+const doctorName = localStorage.getItem('doctorName');
+if (doctorName) {
+    document.querySelector('.logo').innerText = `MediCare | Dr. ${doctorName}`;
+}

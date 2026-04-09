@@ -1,8 +1,22 @@
-/* 1. Layout Integration (Matches Sidebar/Main Content) */
+/* --- 0. GLOBAL RESET (Fixes the top and left white gaps) --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    background-color: #f4f7fb; /* Matches the main content background */
+}
+
+/* 1. Layout Integration */
 .layout {
     display: flex;
     min-height: 100vh;
-    background-color: #f4f7fb;
+    width: 100%;
 }
 
 .main-content {
@@ -11,80 +25,19 @@
     background-color: #f4f7fb;
 }
 
-/* Styling for all standard blue buttons */
-.btn-primary {
-    background-color: #2563eb; /* Primary Medicare Blue */
-    color: white;
-    padding: 14px 28px;
-    border: none;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    width: 100%;
-    margin-top: 15px; /* Spacing for the card */
-    transition: background 0.2s ease, transform 0.1s;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); /* Soft blue shadow */
-    font-family: 'Inter', -apple-system, sans-serif; /* Cleaner font */
-}
-
-.btn-primary:hover {
-    background-color: #1e40af; /* Darker navy on hover */
-    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
-}
-
-.btn-primary:active {
-    transform: scale(0.98); /* Tactile press feel */
-}
-
-/* Custom File Input Styling (The Dotted Box) */
-/* This makes the boring 'Choose File' button look like a medical drop-zone */
-.file-upload-wrapper {
-    display: block;
-    width: 100%;
-    margin-bottom: 20px;
-    padding: 20px;
-    border: 2px dashed #cbd5e1; /* Dash border for medical upload theme */
-    border-radius: 12px;
-    cursor: pointer;
-    background: #f8fafc;
-    transition: all 0.3s ease;
-    text-align: left; /* Align text left */
-}
-
-.file-upload-wrapper:hover {
-    border-color: #2563eb; /* Primary blue on hover */
-    background: #eff6ff; /* Light blue flash on hover */
-}
-
-/* Hide the actual ugly browser input */
-input[type="file"].styled-input {
-    opacity: 0;
-    position: absolute;
-    z-index: -1;
-}
-
-/* Custom text for the file wrapper */
-.file-upload-text {
-    color: #475569;
-    font-weight: 500;
-    margin-left: 10px;
-}
-
 /* 2. Detection Card Container */
-/* This matches the "white box" look in your screenshot */
 .detection-container {
     background: white;
     padding: 40px;
     border-radius: 16px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     width: 100%;
-    max-width: 600px; /* Slightly wider for better UI */
-    margin: 0 auto;   /* Centers it in the main-content area */
+    max-width: 600px;
+    margin: 0 auto;
     text-align: center;
 }
 
-/* 3. Heading Style - Matching MediCare Navy */
+/* 3. Heading Style */
 .detection-container h1 {
     color: #0f4c81; 
     font-size: 2rem;
@@ -110,7 +63,7 @@ input[type="file"]:hover {
     background: #eff6ff;
 }
 
-/* 5. Predict Button - Matching Dashboard Buttons */
+/* 5. Predict Button */
 .btn-predict {
     background-color: #2563eb;
     color: white;
@@ -129,97 +82,45 @@ input[type="file"]:hover {
     background-color: #1e40af;
 }
 
-.btn-predict:active {
-    transform: scale(0.98);
-}
-
-/* 6. Image Preview Styling */
-#preview {
-    max-width: 100%;
-    max-height: 350px;
-    object-fit: contain;
-    border-radius: 12px;
-    margin: 20px 0;
-    border: 1px solid #e2e8f0;
-    display: none; /* Controlled by JS */
-}
-
-/* 7. Result Box - Matching "Confirmed" tag style */
-#result {
-    margin-top: 30px;
-    padding: 25px;
-    border-radius: 12px;
-    background: #f0f6fd; /* Light blue background */
-    border: 1px solid #dbe7f3;
-}
-
-#result h3 {
-    margin: 8px 0;
-    color: #0f4c81;
-    font-size: 1.2rem;
-}
-
-/* Specific styling for the prediction result */
-.prediction-text {
-    color: #2563eb !important;
-    font-size: 1.5rem !important;
-    font-weight: 800;
-    text-transform: uppercase;
-}
-
-/* 8. Loading Spinner/Text */
-#loading {
-    margin-top: 20px;
-    color: #64748b;
-    font-weight: 500;
-    display: none;
-}
-
-
-/* --- SIDEBAR SYSTEM --- */
+/* --- SIDEBAR SYSTEM (DASHBOARD MATCH) --- */
+/* --- EXTRACTED SIDEBAR SYSTEM (From appointment.css) --- */
 .sidebar {
-    width: 260px;
-    background-color: #0f4c81; /* Matches your dashboard navy */
-    color: white;
-    display: flex;
-    flex-direction: column;
-    padding: 40px 20px;
-    flex-shrink: 0; /* Prevents the sidebar from collapsing */
+    width: 240px;          /* Matching your exact class width */
+    background: #0f4c81;   /* MediCare Navy */
+    color: white;          /* White text */
+    padding: 30px 20px;    /* Consistent padding */
+    min-height: 100vh;     /* Ensures full screen height */
+    display: flex;         /* Added to support flex layout */
+    flex-direction: column; /* Stacks links vertically */
 }
 
 .sidebar h2 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 40px;
-    padding-left: 10px;
+    margin-bottom: 30px;   /* Logo spacing */
+    font-size: 22px;       /* Matching your logo size */
 }
 
-.sidebar nav {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+.sidebar a {
+    display: block;        /* Important: Keeps links on their own line */
+    color: white;          /* Link color */
+    padding: 12px 14px;    /* Internal button padding */
+    margin-bottom: 10px;   /* Spacing between buttons */
+    border-radius: 8px;    /* Rounded corners */
+    text-decoration: none; /* Removes underline */
 }
 
-.sidebar nav a {
-    color: white;
-    text-decoration: none;
-    padding: 12px 16px;
-    border-radius: 8px;
-    font-weight: 500;
-    transition: all 0.2s ease;
+/* Matching the active state and hover effect from your CSS */
+.sidebar a.active,
+.sidebar a:hover {
+    background: rgba(255, 255, 255, 0.18); /* Semi-transparent white highlight */
 }
 
-/* The light blue highlight for the active page */
-.sidebar nav a.active {
-    background-color: rgba(255, 255, 255, 0.2);
-    font-weight: 600;
-}
-
-.sidebar nav a:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+/* Utility to push logout to the bottom if needed */
+.logout-link {
+    margin-top: auto;      
 }
 
 .logout-link {
-    margin-top: auto; /* Pushes logout to the bottom */
-    color: #cbd5e1 !important;
+    margin-top: auto; 
+    padding: 14px 20px;
+    color: rgba(255, 255, 255, 0.7) !important;
 }
