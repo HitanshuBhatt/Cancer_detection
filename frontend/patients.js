@@ -84,29 +84,38 @@ function filterPatients() {
 async function registerPatient(event) {
     event.preventDefault();
 
-    const formData = new FormData();
-    formData.append("first_name", document.getElementById('firstName').value);
-    formData.append("last_name", document.getElementById('lastName').value);
-    formData.append("dob", document.getElementById('dob').value);
-    formData.append("gender", document.getElementById('gender').value);
-    formData.append("contact", document.getElementById('contact').value);
+    const API_BASE_URL = "http://127.0.0.1:8000";
 
     try {
+        // All these IDs now match your HTML exactly
+        const patientData = {
+            first_name: document.getElementById('firstName').value,
+            last_name: document.getElementById('lastName').value,
+            dob: document.getElementById('dob').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            address: document.getElementById('address').value,
+            medical_conditions: document.getElementById('other_conditions').value,
+            gender: document.getElementById('gender').value
+        };
+
         const response = await fetch(`${API_BASE_URL}/register-patient`, {
             method: 'POST',
-            body: formData
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(patientData)
         });
+
+        const result = await response.json();
 
         if (response.ok) {
             alert("✅ Patient successfully registered!");
             event.target.reset(); // Clears the form
-            if (typeof fetchPatients === "function") fetchPatients(); 
+            if (typeof fetchPatients === "function") fetchPatients(); // Refresh table if function exists
         } else {
-            const err = await response.json();
-            alert("❌ Registration failed: " + (err.detail || "Server error"));
+            alert("❌ Registration failed: " + (result.detail || "Unknown error"));
         }
     } catch (error) {
-        console.error("Connection Error:", error);
-        alert("❌ Could not connect to the backend server.");
+        console.error("Critical Error:", error);
+        alert("❌ Could not connect to the server. Check if main.py is running.");
     }
 }

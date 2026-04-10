@@ -5,6 +5,7 @@ from pydantic import BaseModel, EmailStr
 import aiomysql
 import hashlib 
 import mysql.connector 
+from typing import Optional
 
 # 1. Initialize the app ONLY ONCE
 app = FastAPI()
@@ -186,3 +187,87 @@ async def add_patient(
     finally:
         if conn:
             conn.close()
+
+
+            # --- PATIENT MODELS ---
+# --- PATIENT MODELS ---
+class PatientRegistration(BaseModel):
+    first_name: str
+    last_name: str
+    dob: str
+    email: str
+    phone: str
+    address: str
+    medical_conditions: str  # This matches the frontend input
+    gender: Optional[str] = None
+
+# --- CONSOLIDATED REGISTRATION ROUTE ---
+@app.post("/register-patient")
+async def register_patient(patient: PatientRegistration):
+    conn = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # Mapping medical_conditions to cancer_type ensures it appears in your table
+        query = """
+        INSERT INTO patients (first_name, last_name, dob, email, phone, address, cancer_type)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """
+        
+        values = (
+            patient.first_name, 
+            patient.last_name, 
+            patient.dob, 
+            patient.email, 
+            patient.phone, 
+            patient.address, 
+            patient.medical_conditions 
+        )
+        
+        cursor.execute(query, values)
+        conn.commit()
+        return {"status": "success", "message": "Patient registered successfully"}
+    
+    except Exception as e:
+        print(f"❌ Database Error: {e}")
+        # Return specific error to help debug the frontend
+        raise HTTPException(status_code=500, detail=f"Database Error: {str(e)}")
+    
+    finally:
+        if conn and conn.is_connected():
+            cursor.close()
+            conn.close()
+
+
+
+from datetime import date
+
+@app.get("/get-today-appointments")
+async def get_today_appointments():
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        # This version pulls the 5 most recent appointments regardless of the date
+        # Use this to confirm that your frontend is actually talking to the database
+        query = """
+        SELECT a.appointment_id, p.first_name, p.last_name, 
+               DATE_FORMAT(a.appointment_time, '%b %d, %H:%i') as time, 
+               p.phone as contact, a.reason, a.status
+        FROM appointments a
+        JOIN patients p ON a.patient_id = p.patient_id
+        ORDER BY a.appointment_time DESC
+        LIMIT 5
+        """
+        
+        cursor.execute(query)
+        appointments = cursor.fetchall()
+        print(f"DEBUG: Found {len(appointments)} total recent appointments") # Check your terminal!
+        
+        cursor.close()
+        conn.close()
+        return appointments
+    except Exception as e:
+        print(f"❌ Today's Fetch Error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
