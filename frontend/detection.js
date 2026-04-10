@@ -86,3 +86,36 @@ async function uploadImage() {
         `;
     }
 }
+
+async function loadDashboardData() {
+    try {
+        const response = await fetch('http://127.0.0.1:8000/get-today-appointments');
+        const todayAppointments = await response.json();
+
+        // 1. Update the 'Today's Appointments' counter
+        document.getElementById('todayCount').innerText = todayAppointments.length;
+
+        // 2. Populate the 'Scheduled for Today' table
+        const tableBody = document.querySelector('#todayTable tbody');
+        tableBody.innerHTML = ''; // Clear old data
+
+        if (todayAppointments.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="5">No appointments for today.</td></tr>';
+        } else {
+            todayAppointments.forEach(appt => {
+                const row = `
+                    <tr>
+                        <td>${appt.time}</td>
+                        <td>${appt.first_name} ${appt.last_name}</td>
+                        <td>${appt.contact || 'N/A'}</td>
+                        <td>${appt.reason}</td>
+                        <td><span class="status-${appt.status.toLowerCase()}">${appt.status}</span></td>
+                    </tr>
+                `;
+                tableBody.insertAdjacentHTML('beforeend', row);
+            });
+        }
+    } catch (error) {
+        console.error('Error loading dashboard:', error);
+    }
+}

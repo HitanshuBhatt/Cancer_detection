@@ -2,42 +2,37 @@ async function loadDashboard() {
     try {
         const response = await fetch('http://127.0.0.1:8000/get-appointments');
         const appointments = await response.json();
-        
-        // 1. Get Today's Date in YYYY-MM-DD format (e.g., "2026-04-09")
-        const todayStr = new Date().toISOString().split('T')[0];
 
-        // 2. Filter using the first 10 characters of your DB timestamp
-        const todaysAppts = appointments.filter(appt => {
-            const dbDateOnly = appt.appointment_time.substring(0, 10);
-            return dbDateOnly === todayStr;
-        });
-
-        // --- UPCOMING APPOINTMENTS SECTION ---
+        // FIX: Use local time instead of ISO (UTC) to avoid timezone skips
         const now = new Date();
-        const sevenDaysLater = new Date();
-        sevenDaysLater.setDate(now.getDate() + 7);
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const todayStr = `${year}-${month}-${day}`;
 
-        const upcomingAppts = appointments.filter(appt => {
-            const apptDate = new Date(appt.appointment_time);
-            // Must be after right now and within the 7-day window
-            return apptDate > now && apptDate <= sevenDaysLater;
-        });
-        // -------------------------------------
+        // Filter data
+        const todayAppts = appointments.filter(a => a.appointment_time.startsWith(todayStr));
+        const upcomingAppts = appointments.filter(a => new Date(a.appointment_time) > now);
 
-        // 3. Update the UI Counters using your HTML IDs
-        const todayCount = document.getElementById('todayAppointments');
-        const totalCount = document.getElementById('totalAppointments');
-        const upcomingCount = document.getElementById('futureAppointments'); // ADD THIS
+        // CRITICAL: Save this so toggleAppointments() can see it
+        window.todaysApptsData = todayAppts;
 
-        if (todayCount) todayCount.textContent = todaysAppts.length; 
-        if (totalCount) totalCount.textContent = appointments.length; 
-        if (upcomingCount) upcomingCount.textContent = upcomingAppts.length; // ADD THIS
+        // Update Stat Cards
+        document.getElementById('todayAppointments').innerText = todayAppts.length;
+        document.getElementById('totalAppointments').innerText = appointments.length;
+        document.getElementById('futureAppointments').innerText = upcomingAppts.length;
 
-        window.todaysApptsData = todaysAppts;
+        console.log("System Date (Local):", todayStr);
+        console.log("Appointments Found for Today:", todayAppts.length);
 
     } catch (error) {
-        console.error("Database sync error:", error);
+        console.error("❌ Dashboard Load Error:", error);
     }
+}
+// Function to show/hide the table when clicking the "Today's Appointments" card
+function toggleAppointments() {
+    const panel = document.getElementById('expanded-appointments');
+    panel.style.display = (panel.style.display === 'none') ? 'block' : 'none';
 }
 
 function toggleAppointments() {
