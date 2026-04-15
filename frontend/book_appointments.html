@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MediCare - Signup & Booking</title>
+    <link rel="stylesheet" href="book_appointments.css">
+</head>
+<body>
+
+<div class="booking-container">
+    <h2>Patient Signup</h2>
+    <form id="signupForm">
+        <input type="text" id="s_firstName" placeholder="First Name" required>
+        <input type="text" id="s_lastName" placeholder="Last Name" required>
+        <input type="date" id="s_dob" required>
+        <input type="email" id="s_email" placeholder="Email Address" required>
+        <input type="tel" id="s_phone" placeholder="Phone Number" required>
+
+        <button type="submit" class="btn">Sign Up</button>
+    </form>
+</div>
+
+<div class="booking-container">
+    <h2>Book Appointment</h2>
+    <form id="appointmentForm">
+        <input type="email" id="email" placeholder="Email (must be registered)" required>
+
+        <label>Preferred Date & Time</label>
+        <input type="datetime-local" id="apptTime" required>
+
+        <textarea id="reason" placeholder="Reason for visit"></textarea>
+
+        <button type="submit" class="btn">Confirm Booking</button>
+    </form>
+
+</div>
+
+<p> Doctors click here to login : <a href="login.html">Login</a></p>
+<script>
+/* ================= SIGNUP ================= */
+document.getElementById('signupForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const signupData = {
+        first_name: document.getElementById('s_firstName').value,
+        last_name: document.getElementById('s_lastName').value,
+        dob: document.getElementById('s_dob').value,
+        email: document.getElementById('s_email').value,
+        phone: document.getElementById('s_phone').value
+    };
+
+    try {
+        const res = await fetch('http://127.0.0.1:8000/create-patient', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(signupData)
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+            alert("Signup successful! Now book appointment.");
+        } else {
+            alert("Signup failed: " + data.detail);
+        }
+
+    } catch (err) {
+        console.error(err);
+        alert("Signup error");
+    }
+});
+
+
+/* ================= BOOKING ================= */
+document.getElementById('appointmentForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const bookingData = {
+        email: document.getElementById('email').value,
+        appointment_time: document.getElementById('apptTime').value.replace('T', ' ') + ":00",
+        reason: document.getElementById('reason').value
+    };
+
+    try {
+        const res = await fetch('http://127.0.0.1:8000/public-book-appointment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(bookingData)
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+            alert("Appointment booked successfully!");
+        } else {
+            alert("Booking failed: " + data.detail);
+        }
+
+    } catch (err) {
+        console.error(err);
+        alert("Booking error");
+    }
+});
+</script>
+
+</body>
+</html>

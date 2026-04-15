@@ -7,27 +7,25 @@ import hashlib
 import mysql.connector 
 from typing import Optional
 
-# 1. Initialize the app ONLY ONCE
+# 1. Initialize the app
 app = FastAPI()
 
-# 2. Setup CORS Middleware
+# 2. Setup CORS Middleware - Use wildcard to prevent Chrome blocking
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], 
+    allow_origins=["*"],  # Allows any frontend to connect
     allow_credentials=True,
-    allow_methods=["*"], 
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Configuration for your MySQL database
 DB_CONFIG = {
     "host": "localhost",
     "user": "root",
-    "password": "Root@123", # Replace with your actual password
-    "database": "LungCancer" # mysql-connector uses 'database', aiomysql uses 'db'
+    "password": "Root@123", 
+    "database": "LungCancer" 
 }
 
-# Synchronous connection helper for standard routes
 def get_db_connection():
     return mysql.connector.connect(
         host=DB_CONFIG["host"],
@@ -36,15 +34,13 @@ def get_db_connection():
         database=DB_CONFIG["database"]
     )
 
-# 3. Include your external routes
 app.include_router(router)
 
-# 4. Basic Root Route
 @app.get("/")
 def home():
     return {"message": "Lung Cancer Detection API Running"}
 
-# --- AUTH MODELS ---
+# --- AUTH MODELS & ROUTES ---
 class UserSignup(BaseModel):
     full_name: str
     email: EmailStr
@@ -52,222 +48,137 @@ class UserSignup(BaseModel):
     dob: str
     address: str
 
-# --- ASYNCHRONOUS AUTH ROUTES ---
-
 @app.post("/signup")
 async def register_doctor(user: UserSignup):
     hashed_pw = hashlib.sha256(user.password.encode()).hexdigest()
-    
-    # aiomysql uses 'db' instead of 'database'
-    conn = await aiomysql.connect(
-        host=DB_CONFIG["host"],
-        user=DB_CONFIG["user"],
-        password=DB_CONFIG["password"],
-        db=DB_CONFIG["database"]
-    )
+    conn = await aiomysql.connect(**DB_CONFIG, db=DB_CONFIG["database"])
     async with conn.cursor() as cur:
         try:
-            sql = """INSERT INTO users (full_name, email, password_hash, role, dob, address) 
-                     VALUES (%s, %s, %s, %s, %s, %s)"""
-            await cur.execute(sql, (user.full_name, user.email, hashed_pw, "Doctor", user.dob, user.address))
+            sql = "INSERT INTO users (full_name, email, password_hash, role, dob, address) VALUES (%s, %s, %s, 'Doctor', %s, %s)"
+            await cur.execute(sql, (user.full_name, user.email, hashed_pw, user.dob, user.address))
             await conn.commit()
             return {"message": "Doctor registered successfully"}
-        except Exception as e:
-            raise HTTPException(status_code=400, detail=f"Registration failed: {str(e)}")
         finally:
             conn.close()
 
-@app.post("/login")
-async def doctor_login(credentials: dict):
-    email = credentials.get("email")
-    password = credentials.get("password")
-    if not email or not password:
-        raise HTTPException(status_code=400, detail="Missing email or password")
-        
-    hashed_pw = hashlib.sha256(password.encode()).hexdigest()
+# --- BOOKING LOGIC WITH AVAILABILITY CHECK ---
+from typing import Optional
 
-    conn = await aiomysql.connect(
-        host=DB_CONFIG["host"],
-        user=DB_CONFIG["user"],
-        password=DB_CONFIG["password"],
-        db=DB_CONFIG["database"]
-    )
-    async with conn.cursor(aiomysql.DictCursor) as cur:
-        sql = "SELECT * FROM users WHERE email = %s AND password_hash = %s AND role = 'Doctor'"
-        await cur.execute(sql, (email, hashed_pw))
-        user = await cur.fetchone()
-        conn.close()
+class PublicBooking(BaseModel):
+    email: str
+    appointment_time: str
+    reason: Optional[str] = None
 
-        if user:
-            return {"status": "success", "redirect": "/dashboard.html", "name": user['full_name']}
-        else:
-            raise HTTPException(status_code=401, detail="Invalid Doctor Credentials")
+from datetime import datetime
 
-# --- SYNCHRONOUS DATA ROUTES ---
+@app.post("/public-book-appointment")
+async def public_book_appointment(data: PublicBooking):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True, buffered=True)
 
-@app.get("/patients")
-async def get_patients():
     try:
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM patients")
-        patients = cursor.fetchall()
+        appointment_time = datetime.fromisoformat(data.appointment_time)
+
+        # 1. Check patient exists
+        cursor.execute("SELECT patient_id FROM patients WHERE email = %s", (data.email,))
+        patient = cursor.fetchone()
+
+        if not patient:
+            raise HTTPException(
+                status_code=400,
+                detail="Patient does not exist. Please sign up first."
+            )
+
+        patient_id = patient["patient_id"]
+
+        # 2. Get doctor
+        cursor.execute("SELECT user_id FROM users WHERE role = 'Doctor' LIMIT 1")
+        doctor = cursor.fetchone()
+
+        if not doctor:
+            raise HTTPException(status_code=500, detail="No doctor found")
+
+        doctor_id = doctor["user_id"]
+
+        # 3. Check availability (clean version)
+        cursor.execute("""
+            SELECT appointment_id 
+            FROM appointments 
+            WHERE appointment_time = %s AND doctor_id = %s
+        """, (appointment_time, doctor_id))
+
+        existing = cursor.fetchone()
+
+        if existing:
+            raise HTTPException(status_code=400, detail="Time slot already booked")
+
+        # 4. Insert appointment
+        cursor.execute("""
+            INSERT INTO appointments 
+            (patient_id, doctor_id, appointment_time, reason, status)
+            VALUES (%s, %s, %s, %s, 'Pending')
+        """, (
+            patient_id,
+            doctor_id,
+            appointment_time,
+            data.reason
+        ))
+
+        conn.commit()
+
+        return {"message": "Appointment booked successfully"}
+
+    except mysql.connector.Error as db_error:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail=f"MySQL Error: {str(db_error)}")
+
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+
+    finally:
         cursor.close()
         conn.close()
-        return patients
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/get-appointments")
-async def get_appointments():
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
-        query = """
-        SELECT a.appointment_id, p.first_name, p.last_name, a.appointment_time, a.reason, a.status
-        FROM appointments a
-        JOIN patients p ON a.patient_id = p.patient_id
-        ORDER BY a.appointment_time DESC
-        """
-        cursor.execute(query)
-        appointments = cursor.fetchall()
-        cursor.close()
-        conn.close()
-        return appointments
-    except Exception as e:
-        print(f"❌ Fetch Error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-    
-@app.post("/add-appointment")
-async def add_appointment(
-    patient_id: int = Form(...), 
-    doctor_id: int = Form(...),  
-    appt_date: str = Form(...),
-    appt_time: str = Form(...),
-    reason: str = Form(...)
-):
-    conn = None
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        full_datetime = f"{appt_date} {appt_time}:00" 
-        
-        query = "INSERT INTO appointments (patient_id, doctor_id, appointment_time, reason, status) VALUES (%s, %s, %s, %s, 'Confirmed')"
-        values = (patient_id, doctor_id, full_datetime, reason)
-        
-        cursor.execute(query, values)
-        conn.commit() 
-        return {"message": "Success"}
-    except Exception as e:
-        print(f"❌ DB Error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-    finally:
-        if conn:
-            conn.close()
-
-@app.post("/add-patient")
-async def add_patient(
-    first_name: str = Form(...),
-    last_name: str = Form(...),
-    dob: str = Form(...),
-    cancer_type: str = Form(...)
-):
-    conn = None
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        query = "INSERT INTO patients (first_name, last_name, dob, cancer_type) VALUES (%s, %s, %s, %s)"
-        values = (first_name, last_name, dob, cancer_type)
-        cursor.execute(query, values)
-        conn.commit() 
-        return {"message": "Patient registered successfully"}
-    except Exception as e:
-        print(f"❌ Error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-    finally:
-        if conn:
-            conn.close()
-
-
-            # --- PATIENT MODELS ---
-# --- PATIENT MODELS ---
-class PatientRegistration(BaseModel):
+class PatientCreate(BaseModel):
     first_name: str
     last_name: str
     dob: str
     email: str
     phone: str
-    address: str
-    medical_conditions: str  # This matches the frontend input
-    gender: Optional[str] = None
 
-# --- CONSOLIDATED REGISTRATION ROUTE ---
-@app.post("/register-patient")
-async def register_patient(patient: PatientRegistration):
-    conn = None
+@app.post("/create-patient")
+async def create_patient(data: PatientCreate):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
     try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        
-        # Mapping medical_conditions to cancer_type ensures it appears in your table
-        query = """
-        INSERT INTO patients (first_name, last_name, dob, email, phone, address, cancer_type)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
-        """
-        
-        values = (
-            patient.first_name, 
-            patient.last_name, 
-            patient.dob, 
-            patient.email, 
-            patient.phone, 
-            patient.address, 
-            patient.medical_conditions 
-        )
-        
-        cursor.execute(query, values)
+        cursor.execute("SELECT * FROM patients WHERE email = %s", (data.email,))
+        if cursor.fetchone():
+            return {"message": "Patient already exists"}
+
+        cursor.execute("""
+            INSERT INTO patients (first_name, last_name, dob, email, phone)
+            VALUES (%s, %s, %s, %s, %s)
+        """, (data.first_name, data.last_name, data.dob, data.email, data.phone))
+
         conn.commit()
-        return {"status": "success", "message": "Patient registered successfully"}
-    
+        return {"message": "Patient created successfully"}
+
     except Exception as e:
-        print(f"❌ Database Error: {e}")
-        # Return specific error to help debug the frontend
-        raise HTTPException(status_code=500, detail=f"Database Error: {str(e)}")
-    
+        conn.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+
     finally:
-        if conn and conn.is_connected():
-            cursor.close()
-            conn.close()
-
-
-
-from datetime import date
-
-@app.get("/get-today-appointments")
-async def get_today_appointments():
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
-        
-        # This version pulls the 5 most recent appointments regardless of the date
-        # Use this to confirm that your frontend is actually talking to the database
-        query = """
-        SELECT a.appointment_id, p.first_name, p.last_name, 
-               DATE_FORMAT(a.appointment_time, '%b %d, %H:%i') as time, 
-               p.phone as contact, a.reason, a.status
-        FROM appointments a
-        JOIN patients p ON a.patient_id = p.patient_id
-        ORDER BY a.appointment_time DESC
-        LIMIT 5
-        """
-        
-        cursor.execute(query)
-        appointments = cursor.fetchall()
-        print(f"DEBUG: Found {len(appointments)} total recent appointments") # Check your terminal!
-        
         cursor.close()
         conn.close()
-        return appointments
-    except Exception as e:
-        print(f"❌ Today's Fetch Error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+
+        # --- DATA RETRIEVAL ROUTES ---
+@app.get("/get-appointments")
+async def get_appointments():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT a.*, p.first_name, p.last_name FROM appointments a JOIN patients p ON a.patient_id = p.patient_id")
+    res = cursor.fetchall()
+    conn.close()
+    return res

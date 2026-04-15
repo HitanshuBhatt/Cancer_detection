@@ -1,0 +1,128 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Body styling */
+body {
+    background: linear-gradient(135deg, #e3f2fd, #f8fbff);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 20px;
+}
+
+/* Container */
+.booking-container {
+    background: #ffffff;
+    padding: 30px 25px;
+    margin: 20px;
+    width: 100%;
+    max-width: 420px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.booking-container:hover {
+    transform: translateY(-5px);
+}
+
+/* Headings */
+.booking-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+/* Inputs */
+input,
+textarea {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: 0.2s;
+    background-color: #f9fbfd;
+}
+
+input:focus,
+textarea:focus {
+    border-color: #3498db;
+    outline: none;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.15);
+}
+
+/* Label */
+label {
+    font-size: 13px;
+    margin-bottom: 5px;
+    display: block;
+    color: #555;
+}
+
+/* Button */
+.btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    background: linear-gradient(135deg, #2980b9, #1f6391);
+    transform: translateY(-2px);
+}
+
+/* Responsive layout */
+@media (min-width: 900px) {
+    body {
+        justify-content: center;
+        align-items: center;
+    }
+
+    .booking-container {
+        display: inline-block;
+        vertical-align: top;
+    }
+}
+
+/* Subtle divider (optional if you add it in HTML) */
+.divider {
+    text-align: center;
+    margin: 20px 0;
+    color: #aaa;
+    font-size: 13px;
+}
+
+/* Alerts (future use) */
+.alert {
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.alert-success {
+    background: #eafaf1;
+    color: #2ecc71;
+}
+
+.alert-error {
+    background: #fdecea;
+    color: #e74c3c;
+}
