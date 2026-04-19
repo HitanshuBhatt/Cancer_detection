@@ -95,7 +95,7 @@ This was built as a capstone project to demonstrate how machine learning can be 
 ![Appointments](screenshots/appointments.png)
 
 **Homepage**
-![HomePage](screenshots/home_page.png)
+![HomePage](screenshots/homepage.png)
 
 **Public Booking Portal**
 ![Public Booking](screenshots/booking.png)
