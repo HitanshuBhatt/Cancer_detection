@@ -6,6 +6,45 @@
     <link rel="stylesheet" href="book_appointments.css">
 </head>
 <body>
+    <div class="top-strip">
+     <div class="container top-strip-inner">
+      <div class="top-left">
+        <span>📍 Emergency Care | 24/7 Support</span>
+        <span>📞 +1 587-378-7574</span>
+      </div>
+      <div class="top-right">
+        <span>🕒 10:00am to 10:00pm</span>
+        <span>✉ hitanshusbhatt@gmail.com</span>
+        <span>🌐 English</span>
+      </div>
+    </div>
+  </div>
+
+  <header class="header">
+    <div class="container nav-wrap">
+      <div class="brand">
+        <div class="brand-mark">⚕</div>
+        <div>
+          <h1>Medicare</h1>
+          <p>A Super Specialty Hospital</p>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a href="index.html">Home</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="book_appointments.html" class="btn btn-outline">Book Appointment</a>
+        <a href="login.html" class="login-link">Login</a>
+      </div>
+    </div>
+  </header>
+
+<div class="section-head">
+  <h2>Book Your Appointment</h2>
+  <p>Register as a patient and schedule your visit with our specialists.</p>
+</div>
 
 <div class="booking-container">
     <h2>Patient Signup</h2>
@@ -25,8 +64,10 @@
     <form id="appointmentForm">
         <input type="email" id="email" placeholder="Email (must be registered)" required>
 
-        <label>Preferred Date & Time</label>
-        <input type="datetime-local" id="apptTime" required>
+        <div class="date-group">
+            <label for="preferred-date">Preferred Date & Time</label>
+            <input type="datetime-local" id="preferred-date">
+        </div>
 
         <textarea id="reason" placeholder="Reason for visit"></textarea>
 
@@ -35,7 +76,9 @@
 
 </div>
 
-<p> Doctors click here to login : <a href="login.html">Login</a></p>
+<p class="doctor-login-text">
+    Doctors click here to login: <a href="login.html">Login</a>
+</p>
 <script>
 /* ================= SIGNUP ================= */
 document.getElementById('signupForm').addEventListener('submit', async (e) => {

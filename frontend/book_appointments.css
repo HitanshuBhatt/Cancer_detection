@@ -1,67 +1,260 @@
-/* Reset */
+/* =========================
+   RESET
+========================= */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Body styling */
+.section-head {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.section-head h2 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.section-head p {
+    color: #64748b;
+}
+
+
+
+
+
+/* =========================
+   BODY (FIXED)
+
+========================= */
 body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #e3f2fd, #f8fbff);
     min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 40px 20px;
 }
 
-/* Container */
-.booking-container {
-    background: #ffffff;
-    padding: 30px 25px;
-    margin: 20px;
+
+.top-strip{
+      background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+      color: #ecfeff;
+      font-size: 13px;
+      background-color: #07615c;
+}
+
+.top-strip-inner,
+.top-left,
+.top-right,
+.nav-wrap,
+.social-wrap,
+.footer-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.top-strip-inner {
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 42px;
+  
+}
+
+.top-left,
+.top-right {
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+
+/* =========================
+   CONTAINER (for navbar)
+========================= */
+.container {
+    width: min(1180px, calc(100% - 32px));
+    margin: 0 auto;
+}
+
+/* =========================
+   HEADER / NAVBAR
+========================= */
+.header {
+    position: sticky;   /* keeps it at top */
+    top: 0;
     width: 100%;
-    max-width: 420px;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease;
+    z-index: 999;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(219, 228, 234, 0.7);
+}
+
+/* NAV LAYOUT */
+.nav-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 80px;
+}
+
+/* BRAND */
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-mark {
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #fff7e6, #f4d9a6);
+  color: #946200;
+  font-size: 28px;
+  box-shadow: inset 0 0 0 1px rgba(148, 98, 0, 0.12);
+}
+
+.brand h1 {
+    font-size: 20px;
+}
+
+.brand p {
+    font-size: 12px;
+    color: #888;
+}
+
+/* NAV LINKS */
+.nav {
+    display: flex;
+    gap: 20px;
+}
+
+.nav a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+}
+
+.nav a:hover {
+    color: #3498db;
+}
+
+/* ACTIONS */
+.nav-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.login-link {
+    text-decoration: none;
+    color: #333;
+}
+
+/* BUTTON */
+.btn {
+    border-radius: 14px;
+    padding: 14px;
+    background: linear-gradient(135deg, #0c8d86, #07615c);
+    color: white;
+    font-weight: 600;
+    border: none;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+/* =========================
+   MAIN CONTENT WRAPPER
+========================= */
+.main-content {
+    display: grid;
+    grid-template-columns: repeat(2, 420px);
+    justify-content: center;
+    gap: 40px;
+    padding: 80px 20px;
+}
+
+/* =========================
+   BOOKING CARDS
+========================= */
+.booking-container {
+    background: linear-gradient(180deg, #ffffff, #f8fbfd);
+    padding: 32px;
+    border-radius: 24px;
+    border: 1px solid #dbe4ea;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+    transition: all 0.25s ease;
 }
 
 .booking-container:hover {
     transform: translateY(-5px);
 }
 
-/* Headings */
+/* HEADINGS */
 .booking-container h2 {
-    text-align: center;
+    font-size: 24px;
     margin-bottom: 20px;
-    color: #2c3e50;
-    font-weight: 600;
+    color: #0f172a;
 }
 
-/* Inputs */
+/* =========================
+   FORM LAYOUT (The "Magic" Sauce)
+========================= */
+form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end; /* Aligns button with inputs */
+    gap: 12px;
+}
+
+/* Ensure every input container or input itself stays consistent */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* =========================
+   INPUTS & TEXTAREA REVISIONS
+========================= */
 input,
 textarea {
-    width: 100%;
-    padding: 12px 14px;
-    margin-bottom: 14px;
-    border: 1px solid #dcdcdc;
-    border-radius: 8px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid #dbe4ea;
+    background: #fbfeff;
     font-size: 14px;
-    transition: 0.2s;
-    background-color: #f9fbfd;
+    width: 200px; /* Adjust width to fit your horizontal row */
+    height: 45px; /* Forced height to match the Sign Up section */
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+/* Specific fix for the "Reason for visit" textarea */
+textarea {
+    resize: none; 
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 input:focus,
 textarea:focus {
-    border-color: #3498db;
-    outline: none;
-    background-color: #ffffff;
-    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.15);
+    border-color: #0c8d86;
+    box-shadow: 0 0 0 4px rgba(12, 141, 134, 0.1);
 }
 
-/* Label */
+/* Make buttons match the input height */
+.booking-container button {
+    height: 45px;
+    padding: 0 24px;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+/* LABEL */
 label {
     font-size: 13px;
     margin-bottom: 5px;
@@ -69,60 +262,60 @@ label {
     color: #555;
 }
 
-/* Button */
-.btn {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    background: linear-gradient(135deg, #3498db, #2980b9);
-    color: white;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
+/* Container for the Date Input and Label */
+.date-group {
+    display: flex;
+    flex-direction: column-reverse; /* This puts the label below the input */
+    gap: 4px;
+    align-items: flex-start;
 }
 
-.btn:hover {
-    background: linear-gradient(135deg, #2980b9, #1f6391);
-    transform: translateY(-2px);
+/* Ensure the label text looks consistent */
+.date-group label {
+    font-size: 12px;
+    color: #64748b;
+    margin: 0; /* Remove default margins that might break alignment */
+    padding-left: 4px;
 }
 
-/* Responsive layout */
-@media (min-width: 900px) {
-    body {
-        justify-content: center;
-        align-items: center;
-    }
-
-    .booking-container {
-        display: inline-block;
-        vertical-align: top;
-    }
+/* Ensure the form items stay aligned along their top edges or centers */
+.booking-container form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start; /* Aligns all top edges */
+    gap: 15px;
 }
 
-/* Subtle divider (optional if you add it in HTML) */
-.divider {
-    text-align: center;
-    margin: 20px 0;
-    color: #aaa;
-    font-size: 13px;
-}
 
-/* Alerts (future use) */
-.alert {
-    padding: 10px;
-    border-radius: 6px;
-    margin-bottom: 10px;
+
+/* =========================
+   DOCTOR LOGIN LINK
+========================= */
+.doctor-login-text {
+    margin-top: 30px;
+    padding-left: 20px; /* Aligns with the container edge */
     font-size: 14px;
+    color: #64748b; /* Matches your sub-headings */
 }
 
-.alert-success {
-    background: #eafaf1;
-    color: #2ecc71;
+.doctor-login-text a {
+    color: #0c8d86; /* Matches your brand green */
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
 }
 
-.alert-error {
-    background: #fdecea;
-    color: #e74c3c;
+.doctor-login-text a:hover {
+    color: #07615c; /* Slightly darker green on hover */
+    text-decoration: underline;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+    .nav {
+        display: none;
+    }
 }
